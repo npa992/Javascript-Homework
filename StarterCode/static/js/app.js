@@ -21,25 +21,25 @@ createTable(tableData);
 var button = d3.select('#filter-btn')
 
 
-// button.on('click', function() {
-//   d3.event.preventDefault();
+button.on('click', function() {
+  d3.event.preventDefault();
 
-//     //grab the value entered in the input box
-//   var inputField = d3.select('#datetime')
-//   var inputValue = inputField.property('value');
+    //grab the value entered in the input box
+  var inputField = d3.select('#datetime')
+  var inputValue = inputField.property('value');
 
-//     // filter the data based on the date entered in the input box
-//   var filteredData = tableData.filter(x => x.datetime == inputValue);
+    // filter the data based on the date entered in the input box
+  var filteredData = tableData.filter(x => x.datetime == inputValue);
 
 
-//     //remove the previous data entered into the table
-//   d3.select('tbody').remove();
-//   d3.select('table').append('tbody')
+    //remove the previous data entered into the table
+  d3.select('tbody').remove();
+  d3.select('table').append('tbody')
 
-//     //Use the createTable function to generate a data for the filtered data
-//   createTable(filteredData)
+    //Use the createTable function to generate a data for the filtered data
+  createTable(filteredData)
     
-// })
+})
 
 //optional multi-level filtering
 
@@ -56,21 +56,17 @@ button.on('click', function() {
   // create a dictionary from the input values so that we can use them for our filter function
   var filter = {datetime:inputDate, city: inputCity, state: inputState, country: inputCountry, shape:inputShape}
 
-  console.log(filter)
+  // remove null values not entered
+  Object.keys(filter).forEach((key) => (filter[key] == "") && delete filter[key]);
 
   //This will filter through the tableData based on multiple criterion
   var filterData=tableData.filter(function(item) {
     for (var key in filter) {
-      if (filter[key] == null){
-        continue
-      } else if (item[key] != filter[key]){
+      if (filter[key] != item[key]){
         return false
-      };
+      } return true
     }
-    return true;
   });
-
-  
 
   //remove existing table so that we can add filtered data
   d3.select('tbody').remove();
